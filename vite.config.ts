@@ -1,0 +1,50 @@
+/* eslint-disable import/no-extraneous-dependencies */
+import { defineConfig } from 'vite';
+import type { PluginOption } from 'vite';
+import react from '@vitejs/plugin-react';
+import { VitePWA } from 'vite-plugin-pwa';
+import type { VitePWAOptions } from 'vite-plugin-pwa';
+/* eslint-enable import/no-extraneous-dependencies */
+
+const pwaOptions: Partial<VitePWAOptions> = {
+  registerType: 'autoUpdate',
+  manifest: {
+    id: '/2048_Game/',
+    name: '2048_Game',
+    short_name: '2048_Game',
+    description: 'A React clone of 2048 game',
+    theme_color: '#ffffff',
+    icons: [
+      {
+        src: '/react-2048/assets/',
+        sizes: '192x192',
+        type: 'image/png',
+      },
+      {
+        src: '/react-2048/assets/',
+        sizes: '512x512',
+        type: 'image/png',
+      },
+    ],
+  },
+};
+
+export default defineConfig(({ mode }) => {
+  const isProd = mode === 'production';
+  const plugins: PluginOption[] = [react()];
+
+  if (isProd) {
+    plugins.push(VitePWA(pwaOptions));
+  }
+
+  return {
+    base: isProd ? '/react-2048/' : '/',
+    server: {
+      port: 3000,
+    },
+    plugins,
+    build: {
+      emptyOutDir: true,
+    },
+  };
+});
